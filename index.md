@@ -16,3 +16,29 @@ If Liquid is parsing things correctly a post list should show up below:
     <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ BASE_PATH }}{{ post.url }}">{{ post.title }}</a></li>
   {% endfor %}
 </ul>
+
+Here I'm testing to see if I can get away with not using JS to fill the viewport. Maybe content will fill it, let's see.
+
+Wow.
+
+Is it working?
+
+## NOW IT IS
+
+## NOW IT IS
+
+## NOW IT IS
+
+## NOW IT IS
+
+## NOW IT IS
+
+## NOW IT IS
+
+## NOW IT IS
+
+## NOW IT IS
+## NOW IT IS
+## NOW IT IS
+
+## NOW IT IS

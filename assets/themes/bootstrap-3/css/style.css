@@ -15,10 +15,17 @@
 
 /* Jekyll Bootstrap Colors */
 h1, h2, h3, h4 {
-  color: #f22430;
+  color: #34495e;
 }
+
 #footer {
-  background-color: #fdcd60;
+  background-color: #bdc3c7;
+}
+
+#container-wrapper {
+	position:relative; /* needed for footer positioning*/
+	height:auto !important; /* real browsers */
+	min-height: 100%; /* real browsers */
 }
 
 
