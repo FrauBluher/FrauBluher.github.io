@@ -48,8 +48,21 @@
 
 </head>
 
-<body id="page-body">
-    <div>
+<body id="page-body" style="background-color: #ECF0F1">
+    
+    <div id="videos">
+        <video controls id="BoardRouter" autoplay loop>
+            <source src="assets/BoardRouter.webm"/>
+        </video>
+        <video controls id="ReggaeTron" autoplay loop>
+            <source src="assets/ReggaeTron.webm"/>
+        </video>
+        <video controls id="Ames" autoplay loop>
+            <source src="assets/Ames.webm"/>
+        </video>
+    </div>
+    
+    <div style="height: 100%;">
         <nav class="navbar navbar-default" role="navigation" id="outer">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
@@ -74,8 +87,20 @@
             <!-- /.navbar-collapse -->
         </nav>
 
-        <div id="container-wrapper" style="background-color: rgb(236, 240, 241)">
-            <div class="container">
+        <div id="container-wrapper" style="background-color: rgb(236, 240, 241);  z-index: 2">
+            <div id="mepavlo-banner">
+                          ___                                   
+                         /\_ \                                  
+ _____      __     __  __\//\ \     ___       ___ ___      __   
+/\ '__`\  /'__`\  /\ \/\ \ \ \ \   / __`\   /' __` __`\  /'__`\ 
+\ \ \L\ \/\ \L\.\_\ \ \_/ | \_\ \_/\ \L\ \__/\ \/\ \/\ \/\  __/ 
+ \ \ ,__/\ \__/.\_\\ \___/  /\____\ \____/\_\ \_\ \_\ \_\ \____\
+  \ \ \/  \/__/\/_/ \/__/   \/____/\/___/\/_/\/_/\/_/\/_/\/____/
+   \ \_\                                                        
+    \/_/                                                        
+            </div>
+
+            <div class="container" id="inner-wrapper">
                 
 <div class="page-header">
   <h1>Post Archive </h1>
@@ -115,13 +140,12 @@
 
 
             </div>
-
+        </div>
             <div id="footer">
                 <div class="container">
                     <p>&copy; 2014 Pavlo Manovi</p>
                 </div>
             </div>
-        </div>
     </div>
 </body>
 
