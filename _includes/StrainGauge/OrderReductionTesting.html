@@ -110,7 +110,7 @@ Y = (2*3.14/2048)*Y;
 
 plot([V,Y])
 </pre>
-        <img vspace="5" hspace="5" src="pavlo.me/StrainGauge/OrderReductionTesting_01.png" alt="">
+        <img vspace="5" hspace="5" src="http://pavlo.me/StrainGauge/OrderReductionTesting_01.png" alt="">
         <p>Estimate models using various system ID methods.</p><pre class="codeinput">highorder = 100;
 
 data=iddata(Y,U1,Ts);
@@ -265,15 +265,15 @@ d =
 Sampling time (seconds): 0.001
 Discrete-time state-space model.
 </pre>
-        <img vspace="5" hspace="5" src="pavlo.me/StrainGauge/OrderReductionTesting_02.png" alt="">
-        <img vspace="5" hspace="5" src="pavlo.me/StrainGauge/OrderReductionTesting_03.png" alt="">
-        <img vspace="5" hspace="5" src="pavlo.me/StrainGauge/OrderReductionTesting_04.png" alt="">
-        <img vspace="5" hspace="5" src="pavlo.me/StrainGauge/OrderReductionTesting_05.png" alt="">
-        <img vspace="5" hspace="5" src="pavlo.me/StrainGauge/OrderReductionTesting_06.png" alt="">
-        <img vspace="5" hspace="5" src="pavlo.me/StrainGauge/OrderReductionTesting_07.png" alt="">
-        <img vspace="5" hspace="5" src="pavlo.me/StrainGauge/OrderReductionTesting_08.png" alt="">
-        <img vspace="5" hspace="5" src="pavlo.me/StrainGauge/OrderReductionTesting_09.png" alt="">
-        <img vspace="5" hspace="5" src="pavlo.me/StrainGauge/OrderReductionTesting_10.png" alt="">
+        <img vspace="5" hspace="5" src="http://pavlo.me/StrainGauge/OrderReductionTesting_02.png" alt="">
+        <img vspace="5" hspace="5" src="http://pavlo.me/StrainGauge/OrderReductionTesting_03.png" alt="">
+        <img vspace="5" hspace="5" src="http://pavlo.me/StrainGauge/OrderReductionTesting_04.png" alt="">
+        <img vspace="5" hspace="5" src="http://pavlo.me/StrainGauge/OrderReductionTesting_05.png" alt="">
+        <img vspace="5" hspace="5" src="http://pavlo.me/StrainGauge/OrderReductionTesting_06.png" alt="">
+        <img vspace="5" hspace="5" src="http://pavlo.me/StrainGauge/OrderReductionTesting_07.png" alt="">
+        <img vspace="5" hspace="5" src="http://pavlo.me/StrainGauge/OrderReductionTesting_08.png" alt="">
+        <img vspace="5" hspace="5" src="http://pavlo.me/StrainGauge/OrderReductionTesting_09.png" alt="">
+        <img vspace="5" hspace="5" src="http://pavlo.me/StrainGauge/OrderReductionTesting_10.png" alt="">
         <h2>Simulation Of Models To Real Data<a name="6"></a></h2>
         <p>Using lsim to look at the differences between the actual data, and what our models will predict the output to be.</p><pre class="codeinput">Ts = 1/1000;
 
@@ -308,9 +308,9 @@ plot([Y-yARX3 Y-yARMAX Y-yOE Y-yBJ])
 title(<span class="string">'Error'</span>);
 legend(<span class="string">'ARX'</span>,<span class="string">'ARMAX'</span>,<span class="string">'OE'</span>, <span class="string">'BJ'</span>);
 </pre>
-        <img vspace="5" hspace="5" src="pavlo.me/StrainGauge/OrderReductionTesting_11.png" alt="">
-        <img vspace="5" hspace="5" src="pavlo.me/StrainGauge/OrderReductionTesting_12.png" alt="">
-        <img vspace="5" hspace="5" src="pavlo.me/StrainGauge/OrderReductionTesting_13.png" alt="">
+        <img vspace="5" hspace="5" src="http://pavlo.me/StrainGauge/OrderReductionTesting_11.png" alt="">
+        <img vspace="5" hspace="5" src="http://pavlo.me/StrainGauge/OrderReductionTesting_12.png" alt="">
+        <img vspace="5" hspace="5" src="http://pavlo.me/StrainGauge/OrderReductionTesting_13.png" alt="">
         <h2>Non-Linear Model<a name="7"></a></h2>
         <p>I'm plotting a non-linear ARX model of the system here with 5 regressors and a wavelet network with 57 units which was modeled to the same iddata object. First we'll look at the non-linearity of the wavenet and then simulate the output strain with both the non-linear model and a linearized verion of the nonlinear autoregressive approximation using linapp. Linapp does /not/ use a tangent linearization approach and should work better for larger ranges of input 'u'.</p><pre class="codeinput">figure;
 plot(nlarx1);
@@ -321,10 +321,10 @@ a = ss(a.A, a.B, a.C, a.D, 1/1000);
 plot([Y sim(nlarx1, V) lsim(a, V)]);
 legend(<span class="string">'strain'</span>, <span class="string">'non-linear model'</span>, <span class="string">'linearized nlarx'</span>);
 </pre>
-        <img vspace="5" hspace="5" src="pavlo.me/StrainGauge/OrderReductionTesting_14.png" alt="">
-        <img vspace="5" hspace="5" src="pavlo.me/StrainGauge/OrderReductionTesting_15.png" alt="">
-        <img vspace="5" hspace="5" src="pavlo.me/StrainGauge/OrderReductionTesting_16.png" alt="">
-        <img vspace="5" hspace="5" src="pavlo.me/StrainGauge/OrderReductionTesting_17.png" alt="">
+        <img vspace="5" hspace="5" src="http://pavlo.me/StrainGauge/OrderReductionTesting_14.png" alt="">
+        <img vspace="5" hspace="5" src="http://pavlo.me/StrainGauge/OrderReductionTesting_15.png" alt="">
+        <img vspace="5" hspace="5" src="http://pavlo.me/StrainGauge/OrderReductionTesting_16.png" alt="">
+        <img vspace="5" hspace="5" src="http://pavlo.me/StrainGauge/OrderReductionTesting_17.png" alt="">
         <p class="footer">
             <br>Published with MATLAB&reg; 7.13
             <br>
