@@ -116,11 +116,11 @@ functioning properly.
 
 
 
-![png](IROSDataAnalysis_files/IROSDataAnalysis_6_1.png)
+![png](http://pavlo.me/IROSDataAnalysis_files/IROSDataAnalysis_6_1.png)
 
 
 
-![png](IROSDataAnalysis_files/IROSDataAnalysis_6_2.png)
+![png](http://pavlo.me/IROSDataAnalysis_files/IROSDataAnalysis_6_2.png)
 
 
 Now I'm going to plot interpolated values and filter the strain-gauge data under
@@ -156,7 +156,7 @@ of the longest update period.
     plt.show()
 
 
-![png](IROSDataAnalysis_files/IROSDataAnalysis_8_0.png)
+![png](http://pavlo.me/IROSDataAnalysis_files/IROSDataAnalysis_8_0.png)
 
 
 Now I output the data to a CSV to be used in MATLAB for system ID.
