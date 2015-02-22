@@ -13,6 +13,7 @@ sensors looks like, and more importantly what kind of latencies in the data
 tx/rx exist.  This analysis will allow me to begin designing the digital force
 contoller for each end-cap of SUPERBall.
 
+{% highlight python %}
 
     import numpy as np
     import scipy.signal as sp
@@ -20,6 +21,8 @@ contoller for each end-cap of SUPERBall.
     %pylab inline
 
     Populating the interactive namespace from numpy and matplotlib
+
+{% endhighlight %}
 
 
 First we need to unpack data from the ROS CAN dump into message types.  For the
@@ -30,6 +33,7 @@ commanded current in the system.
 The form of each packet is: [Timestamp in nS; Message ID; Floating Point Value;
 raw uint32_t]
 
+{% highlight python %}
 
     data = np.loadtxt("/home/pavlo/Documents/log3.txt", delimiter=';')  
     
@@ -40,6 +44,8 @@ raw uint32_t]
     Strain = data[np.where(data[:,1]==0)[0],:]
     Pos = data[np.where(data[:,1]==1)[0],:]
     Curr = data[np.where(data[:,1]==2)[0],:]
+
+{% endhighlight %}
 
 Next we get the total time elapsed by taking the difference between the last and
 the first timestamp, for later use, and compute the one dimensional gradient of
@@ -58,6 +64,7 @@ values which will be used in the ID process are found on the motor-controller
 and will be known at every timestamp as long as the motor controller is on and
 functioning properly.
 
+{% highlight python %}
 
     num_rows, num_cols = data.shape
     
@@ -114,6 +121,7 @@ functioning properly.
     Maximum time delay in Curr reading (S): 0.00805184
     Data Points :: Strain: 91785 Pos: 6810 Curr: 68092
 
+{% endhighlight %}
 
 
 ![png](http://pavlo.me/IROSDataAnalysis_files/IROSDataAnalysis_6_1.png)
@@ -128,6 +136,7 @@ the worst-case-scenario conditions to emulate what the system would be like with
 a low-pass on the input with a cutoff of (1/maxStrain)/2, or the nyquist cutoff
 of the longest update period.
 
+{% highlight python %}
 
     #Making sure the scaling is correct: here.
     #91.457555/((lastStamp-firstStamp)/1000000)
@@ -155,12 +164,15 @@ of the longest update period.
     plt.xlabel('Centiseconds')
     plt.show()
 
+{% endhighlight %}
+
 
 ![png](http://pavlo.me/IROSDataAnalysis_files/IROSDataAnalysis_8_0.png)
 
 
 Now I output the data to a CSV to be used in MATLAB for system ID.
 
+{% highlight python %}
 
     output = np.empty([len(interptStrain),3])
     
@@ -169,3 +181,5 @@ Now I output the data to a CSV to be used in MATLAB for system ID.
     output[:,2] = interptCurr
     
     np.savetxt("/home/pavlo/Desktop/output.txt", np.asarray(output), delimiter=",")
+
+{% endhighlight %}
