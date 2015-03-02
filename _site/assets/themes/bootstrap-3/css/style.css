@@ -53,6 +53,14 @@ hr {
     position: absolute;
     /* margins and width/height need to update with the size of the windowl. */
 }
+#PostVideo {
+    width: 420px;
+    height: 340px;
+    transform: rotate(1.5deg);
+    z-index: 1;
+    position: absolute;
+    /* margins and width/height need to update with the size of the windowl. */
+}
 #ReggaeTron {
     width: 320px;
     height: 240px;
