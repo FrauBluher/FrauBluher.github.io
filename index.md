@@ -6,7 +6,7 @@ title: Who?
 
 ## Hey, it's me, Pavlo!
 
-[Here's my short CV.](http://pavlo.me/pavlo-manovi-cv-short.pdf)
+[Here's my short CV.](http://pavlo.me/assets/pavlo-manovi-cv-short.pdf)
 
 Recent Posts:
 
