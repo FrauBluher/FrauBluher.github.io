@@ -17,55 +17,55 @@ To get that square wave into the system, I needed a way of amplifying a referenc
 
 For the load I took the old 4.5 Ohm resistor pack I soldered up for use with the autotransformer and repurposed it as the excitation load.  Before repurposing it, it was a really, really dangerous thing to be left unattended.  I caught someone thinking about plugging it into the unregulated 120 VRMS wall-juice in an attempt to turn it into a cloud of smoke.
 
-<img src="http://pavlo.me/CT/autotransformer.jpg" alt="Hey kid, plug me right into the wall, come on, do it." style="width: 600px;"/>
+<img src="http://pavlo.me/CT/autotransformer.jpg" alt="Hey kid, plug me right into the wall, come on, do it." style="margin-left: auto; margin-right: auto; max-width: 80%; display: block;"/>
 
 Before this, I had completely underestimated the usefulness of a fat resistor and a variable AC load.  Anyway, moving on...
 
 I used some reference parts in eagle, made a quick layout, saved the gerbers to a thumbdrive and went down to the ProtoMat to cut it out.  As always, you must respect the LPKF's Warmingtime.  It's a proper noun.
 
-<img src="http://pavlo.me/CT/warmingtime.jpg" alt="A proper noun." style="width: 600px;"/>
+<img src="http://pavlo.me/CT/warmingtime.jpg" alt="A proper noun." style="margin-left: auto; margin-right: auto; max-width: 80%; display: block;"/>
 
-<video controls style="width: 600px" autoplay loop>
+<video controls style="margin-left: auto; margin-right: auto; max-width: 80%; display: block;" autoplay loop>
             <source src="http://pavlo.me/CT/b.webm"/>
 </video>
 
 Using the 16mil double-flute end mill has always given me great results.
 
-<img src="http://pavlo.me/CT/closeup.jpg" style="width: 600px;"/>
+<img src="http://pavlo.me/CT/closeup.jpg" style="margin-left: auto; margin-right: auto; max-width: 80%; display: block;"/>
 
 All assembled!  So simple!
 
-<img src="http://pavlo.me/CT/LoadCircuit.jpg" style="width: 600px;"/>
+<img src="http://pavlo.me/CT/LoadCircuit.jpg" style="margin-left: auto; margin-right: auto; max-width: 80%; display: block;"/>
 
 Now, the square wave that's going to sink current through the mosfet and excite the load isn't going to be purely a square wave.  Since there's input, output, and reverse transfer capacitance; and resistance in the wires, load, and Rds_on of the FET, there's going to be some sort of a RC time constant of the circuit itself which smooths out the rising edge.  Additionally, there is a finite time where the MOSFET goes through a linear region as the voltage on the gate rises from zero up to the full saturation voltage.  In this case a 4.7 Ohm resistor was added to stop ringing from occuring on the gate line, which exaggerates that even further.  All of these contribute to a more round rising and falling edge of our square wave and a less rich excitation.  However, in the case of this system, the effective bandwidth limitation of the excitation circuit is negligible, as the magnetics of the current transformer will attenuate much more high-frequency energy.
 
 Here's a view of the test setup, for power I'm using one of my more low-impedance-path-explodey-friendly 1-U ATX supplies with my ATX breakout on it:
 
-<img src="http://pavlo.me/CT/testbench.jpg" style="width: 600px;"/>
+<img src="http://pavlo.me/CT/testbench.jpg" style="margin-left: auto; margin-right: auto; max-width: 80%; display: block;"/>
 
 The first test is to see what the PSD of the excited load looks like.  Call this Fig. 1
 
-<img src="http://pavlo.me/CT/FET.png" style="width: 600px;"/>
+<img src="http://pavlo.me/CT/FET.png" style="margin-left: auto; margin-right: auto; max-width: 80%; display: block;"/>
 
 Now let's look at how that signal looks through the CT.  Hey, I just realized that the oscope has its time and date settings off by 24 hours... Call this Fig. 2
 
-<img src="http://pavlo.me/CT/CT.png" style="width: 600px;"/>
+<img src="http://pavlo.me/CT/CT.png" style="margin-left: auto; margin-right: auto; max-width: 80%; display: block;"/>
 
 There's a lot of ways to interpret these results, but, let me walk you through what's most important to my application here.  One of the first things that you can ignore immediately is the shift in magnitude of the entire PSD.  This is to be expected, and if you're eagle-eyed you'll have already noticed that the voltage/div of channel 1 is way larger in Fig. 1 than it is in Fig. 2, which explains the big difference in the sum total energy in the PSD.  If I had cared to figure out how to normalize stuff in the math menu of the o-scope that wouldn't have shown up.
 
 The biggest thing to note is that from the fundamental 1kHz tone to the harmonic at 51-kHz that there's a 35dB change in power for, what I'm going to call, the full-bandwidth excitation signal.  Note that as we go through the current transformer in Fig. 2 that the PSD starts to roll of faster at 51-kHz, and that the edges of the sampled square wave.  You'll see that the PSD starts to attenuate by ~3dB at 51-kHz through the CT, which would imply that the CT has a frequency bandwidth well within the requirements of my system (~16kHz).  Given that my DAQ has ~96dB of dynamic range, I thought that it would be interesting to compare these results to what my DAQ reads.
 
-<img src="http://pavlo.me/CT/SampledCTData.png" style="width: 600px;"/>
+<img src="http://pavlo.me/CT/SampledCTData.png" style="margin-left: auto; margin-right: auto; max-width: 80%; display: block;"/>
 
 Note that the oscilloscope had a resolution of 12.5kHz/div while this DAQ has an anti-aliasing filter on it which starts to roll off at 3dB at ~8kHz.  Also note that I was riding dirty with the signal generator and bumped up the frequency past 1kHz for this test, but was too lazy to go back and redo it to center the fundamental tone at 1kHz.
 
 I wonder what a sweep from 1-kHz to 20-kHz will look like with a datarate of 32kSpS?
 
-<img src="http://pavlo.me/CT/SquareSweepFast.png" style="width: 600px;"/>
+<img src="http://pavlo.me/CT/SquareSweepFast.png" style="margin-left: auto; margin-right: auto; max-width: 80%; display: block;"/>
 
 Let's bump that waaaay up and max out the [mcp3912](http://ww1.microchip.com/downloads/en/DeviceDoc/20005348A.pdf)
 
-<img src="http://pavlo.me/CT/SweepFast.png" style="width: 600px;"/>
+<img src="http://pavlo.me/CT/SweepFast.png" style="margin-left: auto; margin-right: auto; max-width: 80%; display: block;"/>
 
 Cool!  At this temporal resolution you can actually see the equiripple of the 3rd order digital sinc filter due to its settling time.  (Delta-Sigma 4 lyfe)
 
