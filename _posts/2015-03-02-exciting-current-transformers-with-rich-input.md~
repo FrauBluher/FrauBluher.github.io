@@ -47,14 +47,13 @@ The first test is to see what the PSD of the excited load looks like.  Call this
 
 <img src="http://pavlo.me/CT/FET.png" style="width: 600px;"/>
 
-Now let's look at how that signal looks through the CT.  Call this Fig. 2
+Now let's look at how that signal looks through the CT.  Hey, I just realized that the oscope has its time and date settings off by 24 hours... Call this Fig. 2
 
 <img src="http://pavlo.me/CT/CT.png" style="width: 600px;"/>
 
 There's a lot of ways to interpret these results, but, let me walk you through what's most important to my application here.  One of the first things that you can ignore immediately is the shift in magnitude of the entire PSD.  This is to be expected, and if you're eagle-eyed you'll have already noticed that the voltage/div of channel 1 is way larger in Fig. 1 than it is in Fig. 2, which explains the big difference in the sum total energy in the PSD.  If I had cared to figure out how to normalize stuff in the math menu of the o-scope that wouldn't have shown up.
 
 The biggest thing to note is that from the fundamental 1kHz tone to the harmonic at 51-kHz that there's a 35dB change in power for, what I'm going to call, the full-bandwidth excitation signal.  Note that as we go through the current transformer in Fig. 2 that the PSD starts to roll of faster at 51-kHz, and that the edges of the sampled square wave.  You'll see that the PSD starts to attenuate by ~3dB at 51-kHz through the CT, which would imply that the CT has a frequency bandwidth well within the requirements of my system (~16kHz).  Given that my DAQ has ~96dB of dynamic range, I thought that it would be interesting to compare these results to what my DAQ reads.
-
 
 <img src="http://pavlo.me/CT/SampledCTData.png" style="width: 600px;"/>
 
@@ -69,3 +68,5 @@ Let's bump that waaaay up and max out the [mcp3912](http://ww1.microchip.com/dow
 <img src="http://pavlo.me/CT/SweepFast.png" style="width: 600px;"/>
 
 Cool!  At this temporal resolution you can actually see the equiripple of the 3rd order digital sinc filter due to its settling time.  (Delta-Sigma 4 lyfe)
+
+Not bad for a 3 hour push on a Sunday afternoon!

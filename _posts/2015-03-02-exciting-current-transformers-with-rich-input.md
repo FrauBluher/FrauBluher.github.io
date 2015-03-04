@@ -47,7 +47,7 @@ The first test is to see what the PSD of the excited load looks like.  Call this
 
 <img src="http://pavlo.me/CT/FET.png" style="width: 600px;"/>
 
-Now let's look at how that signal looks through the CT.  Call this Fig. 2
+Now let's look at how that signal looks through the CT.  Hey, I just realized that the oscope has its time and date settings off by 24 hours... Call this Fig. 2
 
 <img src="http://pavlo.me/CT/CT.png" style="width: 600px;"/>
 
