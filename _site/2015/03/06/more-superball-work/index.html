@@ -1,0 +1,174 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>More SUPERBall work.</title>
+    
+    <meta name="description" content="">
+    <meta name="author" content="Pavlo Manovi">
+
+    <!-- Enable responsive viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap styles -->
+    <link href="/assets/themes/bootstrap-3/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Optional theme -->
+    <link href="/assets/themes/bootstrap-3/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
+    <!-- Sticky Footer -->
+    <link href="/assets/themes/bootstrap-3/bootstrap/css/bs-sticky-footer.css" rel="stylesheet">
+    <!-- Syntax Highlighting -->
+    <link href="/assets/themes/bootstrap-3/bootstrap/css/syntax.css" rel="stylesheet">
+    <!-- Custom styles -->
+    <link href="/assets/themes/bootstrap-3/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+    <!-- Latest compiled and minified JavaScript, requires jQuery 1.x (2.x not supported in IE8) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <!-- include jQuery UI  From Google Code-->
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
+    <script src="/assets/themes/bootstrap-3/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/assets/themes/bootstrap-3/bootstrap/js/CoolEffects.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <!-- Update these with your own images
+      <link rel="shortcut icon" href="images/favicon.ico">
+      <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+      <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+      <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+    -->
+
+    <!-- atom & rss feed -->
+    <link href="" type="application/atom+xml" rel="alternate" title="Sitewide ATOM Feed">
+    <link href="" type="application/rss+xml" rel="alternate" title="Sitewide RSS Feed">
+
+</head>
+
+<body id="page-body" style="background-color: #ECF0F1">
+    
+    <div id="videos">
+        <video controls id="BoardRouter" autoplay loop>
+            <source src="http://pavlo.me/vidz/BoardRouter.webm"/>
+        </video>
+        <video controls id="ReggaeTron" autoplay loop>
+            <source src="http://pavlo.me/vidz/ReggaeTron.webm"/>
+        </video>
+        <video controls id="Ames" autoplay loop>
+            <source src="http://pavlo.me/vidz/Ames.webm"/>
+        </video>
+    </div>
+    
+    <div style="height: 100%;">
+        <nav class="navbar navbar-default" role="navigation" id="outer">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#jb-navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/" id="me">Me</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="jb-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="/Projects.html" id="posts">Projects</a>
+                    </li>
+                    <li><a href="/archive.html" id="archive">Post Archive</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </nav>
+
+        <div id="container-wrapper" style="background-color: rgb(236, 240, 241);  z-index: 2">
+            <div id="mepavlo-banner">
+                          ___                                   
+                         /\_ \                                  
+ _____      __     __  __\//\ \     ___       ___ ___      __   
+/\ '__`\  /'__`\  /\ \/\ \ \ \ \   / __`\   /' __` __`\  /'__`\ 
+\ \ \L\ \/\ \L\.\_\ \ \_/ | \_\ \_/\ \L\ \__/\ \/\ \/\ \/\  __/ 
+ \ \ ,__/\ \__/.\_\\ \___/  /\____\ \____/\_\ \_\ \_\ \_\ \____\
+  \ \ \/  \/__/\/_/ \/__/   \/____/\/___/\/_/\/_/\/_/\/_/\/____/
+   \ \_\                                                        
+    \/_/                                                        
+            </div>
+
+            <div class="container" id="inner-wrapper">
+                
+<div class="page-header">
+    <h4>06 March 2015</h4>
+</div>
+
+<div class="row post-full">
+    <div class="col-xs-12">
+        <div class="date">
+            <h1>More SUPERBall work. </h1>
+        </div>
+        <div class="content">
+            
+<p>ROS and CAN, that might be a better title for this post.</p>
+
+<p>Originally, I had driven out to Ames to determine why the CAN bus and the motor board were crashing with the new motor position controller.  We initially thought that numerical instabilities were causing math errors which were causing the motor board to have an error trap be thrown, so I attacked the position controller code first.</p>
+
+<p>After much ado, it turned out that numerical stability was not a problem and that the CAN Festival PDO math was to blame for crashing the PIC.  With a few operations removed and reordered, we were able to move forward without worry of the motor board crashing.  As Vytas was coming by with some students from Berkeley, we wanted to make sure that we could support his demonstration with a little motion from the robot.  Yes, it was finally time to get ROS up and running, properly.</p>
+
+<p>I have heard horror stories about ROS usage from past-lovers, colleagues, and extended family members, so I thought that my trepidation in approaching this was warrented, but, it turns out that it wasn&#8217;t.  At least, not yet.  So far, our implementation of ROS on the system is pretty awesome.  Jonathan gave me a VM he was using that has both NTRT and ros installed on it, and we used it for a while, but ended up moving to my own install of ros on my non-virtualized ubuntu instance.</p>
+
+<p>We were initially having issues with getting ROS to work properly as</p>
+
+<p>Talk about DNS stuff here vs. IP.</p>
+
+<p>Show some rqt plots.</p>
+
+<p>videos, and photos.</p>
+
+<p>SAFETY IS OUR CULTURE.</p>
+
+<p>WHAT&#8217;S IN THE BAG?  (What&#8217;s in the box?)</p>
+
+<p>colleague says, spreads blood in the right way, we can cross-compile ross.</p>
+
+        </div>
+
+         
+
+        <hr>
+        <ul class="pagination">
+            
+            <li class="prev"><a href="/2015/03/02/exciting-current-transformers-with-rich-input" title="Exciting Current Transformers With Rich Input">&laquo; Previous</a>
+            </li>
+            
+            <li><a href="/archive.html">Archive</a>
+            </li>
+            
+            <li class="next"><a href="/2015/08/06/hardware-reflections" title="Hardware Reflections">Next &raquo;</a>
+            </li>
+            
+        </ul>
+        <hr>
+    </div>
+</div>
+
+
+            </div>
+        </div>
+            <div>
+                <div class="container">
+                    <p>&copy; 2015 Pavlo Manovi</p>
+                </div>
+            </div>
+    </div>
+</body>
+
+</html>
+
