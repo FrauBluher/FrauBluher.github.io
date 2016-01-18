@@ -118,15 +118,15 @@ Omelette, musili, won-ton soup, great tea, a small salad, a cool view, nice ambi
 
 <img src="http://pavlo.me/ChinaPostPics/breakfast2.jpg" style="margin-left: auto; margin-right: auto; max-width: 80%; display: block;"/>
 
-<video webm="http://pavlo.me/ChinaPostPics/busses.webm" loop="on" autoplay="on" style="margin-left: auto; margin-right: auto; max-width: 80%; display: block;"></video>
+<video loop="on" autoplay="on" muted="on" style="margin-left: auto; margin-right: auto; max-width: 80%; display: block;"><source src="http://pavlo.me/ChinaPostPics/busses.webm" type="video/webm"></video>
 
 The interaction rolls around in my head as I head back to my room and get ready to head out into the city for the first time.  I don a pair of brown corduroys, roll up the pant legs, apply a generous amount of antiperspirant to my underarms and leave the hotel.
 
-[video webm="http://pavlo.me/ChinaPostPics/outside.webm" loop="on" autoplay="on" style="margin-left: auto; margin-right: auto; max-width: 80%; display: block;"></video>
+<video loop="on" autoplay="on" muted="on" style="margin-left: auto; margin-right: auto; max-width: 80%; display: block;"><source src="http://pavlo.me/ChinaPostPics/outside.webm" type="video/webm"></video>
 
 It was obvious that I had quickly left the 'surging middle-class' part of the city which would be my home for the next week and had placed myself directly into the hustle and bustle of a major, real urban area.  A man on a scooter with six propane cannisters rattling around the back honks at a group of young men walking across the street while a young girl and her mother yell up to their father on the fourth floor of a large housing complex; these were the sounds that I craved, sounds which the smooth jazz and synths which I've associated with frosted glass and Hyatt hotels never could satisfy.  The air is wet and flavorful, though the flavor is neither something can describe, nor fully enjoy, and I immediately begin to glisten with sweat.
 
-<video webm="http://pavlo.me/ChinaPostPics/clank.webm" loop="on" autoplay="on" style="margin-left: auto; margin-right: auto; max-width: 80%; display: block;"></video>
+<video loop="on" muted="on" autoplay="on" style="margin-left: auto; margin-right: auto; max-width: 80%; display: block;"><source src="http://pavlo.me/ChinaPostPics/clank.webm" type="video/webm"></video>
 
 My target is Huaqiangbei road, the Mecca to my electronics Hajj.  I think back to the map of the area that I had memorized and begin my short mile walk, meandering at a comfortable pace as to give myself time to take it all in.  Unlike the unbleached cotton and earthy toned linen which adorned the light-skinned transient individuals in the hotel, there was every color and material worn all around me, these were the people that call this place home.  I was getting closer to Huaqiangbei, and the supporting infrastructure began to shift from housing related operations to food and cigarettes.
 
