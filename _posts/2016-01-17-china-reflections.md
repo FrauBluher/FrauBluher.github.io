@@ -7,7 +7,7 @@ tags: []
 ---
 {% include JB/setup %}
 
-**Note:  This journal/reflection is schizophrenic in its tenses as it was written in the moment, and edited after my journey for typos and content.  Most writing was completed before I got caught up with work in the region, and most talk of actual engineering work was written in an a posteriori fashion.  Nevertheless, here it is, with appropriate photos inserted throughout and afterward.**
+**Note:  This journal/reflection is schizophrenic in its tenses as it was written in the moment, and edited after my journey for typos and content.  Most writing was completed before I got caught up with work in the region, and most talk of actual engineering work was written in an a posteriori fashion.  Nevertheless, here it is, with appropriate photos inserted throughout.**
 
 --
 **Day 0 – Preparation**
@@ -141,8 +141,6 @@ As to not reiterate everything that every tech writer has ever written about the
 <img src="http://pavlo.me/ChinaPostPics/ELEC.jpg" style="margin-left: auto; margin-right: auto; max-width: 80%; display: block;"/>
 
 <img src="http://pavlo.me/ChinaPostPics/elec3.jpg" style="margin-left: auto; margin-right: auto; max-width: 80%; display: block;"/>
-
-<img src="http://pavlo.me/ChinaPostPics/elec4.jpg" style="margin-left: auto; margin-right: auto; max-width: 80%; display: block;"/>
 
 I fall asleep at 5:00 PM, that was interesting.
 
