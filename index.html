@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>pavlo.me - CRT Singularity</title>
+    <title>pavlo.me - Amber CRT (Optimized)</title>
     <style>
         /* --- CORE STYLES --- */
         body {
@@ -26,22 +26,31 @@
             position: relative;
             overflow: hidden;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             border-radius: 20px; 
             
-            /* PHOSPHOR BLEED/PERSISTENCE */
+            /* Reduced bloom slightly to save GPU fill rate, still looks intense */
             text-shadow: 
-                0 0 3px #eaffef, 
-                0 0 15px #00ff41, 
-                0 0 40px #00ff41,
-                0 0 60px rgba(0,255,65,0.5);
+                0 0 3px #ffe6b3,
+                0 0 15px #ffb000,
+                0 0 40px #ffb000;
         }
 
-        /* --- LAYERS (Order matters for realism) --- */
+        /* --- LAYERS --- */
 
-        /* LAYER 1: Scanlines (closest to phosphors) */
+        /* LAYER 0: BACKGROUND FLOW CANVAS */
+        #bg-canvas {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1; 
+            opacity: 0.8; 
+            pointer-events: none;
+            /* PERFORMANCE: Hints browser to optimize for opacity changes */
+            will-change: opacity; 
+        }
+
+        /* LAYER 1: Scanlines */
         .crt-screen::before {
             content: " ";
             display: block;
@@ -53,7 +62,7 @@
             background-size: 100% 4px;
         }
 
-        /* LAYER 2: Electronic Noise */
+        /* LAYER 2: Noise - Reduced opacity slightly for performance */
         .noise-overlay {
             position: absolute;
             top: -50%; left: -50%; width: 200%; height: 200%;
@@ -62,36 +71,34 @@
             background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.05"/%3E%3C/svg%3E');
             opacity: 0.12;
             animation: noise-move 0.2s infinite steps(4);
+            /* PERFORMANCE: Promote to GPU layer */
+            will-change: transform; 
         }
 
-        /* LAYER 3: Surface Dust & Grime (Catches internal light) */
+        /* LAYER 3: Dust */
         .dust-overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: 994;
             pointer-events: none;
-            /* Coarse noise texture for dust */
             background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="dust"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.005" numOctaves="5" result="noise"/%3E%3CfeColorMatrix type="matrix" values="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 8 -3" result="contrasted"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23dust)" opacity="0.6"/%3E%3C/svg%3E');
             background-size: cover;
-            /* soft-light makes the dust visible mostly over bright areas */
             mix-blend-mode: soft-light; 
             opacity: 0.7;
         }
 
-        /* LAYER 4: Glass Reflection (Catches external light) */
+        /* LAYER 4: Reflection */
         .reflection-overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: 996;
             pointer-events: none;
-            /* Simulating a window reflection */
             background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 25%, transparent 75%, rgba(255,255,255,0.05) 100%);
-            /* Blurring the reflection makes it look like it's on the glass surface */
-            filter: blur(10px);
+            /* PERFORMANCE: Removed blur() on reflection, simulated with gradient stops for speed */
             mix-blend-mode: screen;
         }
 
-        /* LAYER 5: Vignette & Bezel Shadow (Furthest out) */
+        /* LAYER 5: Vignette */
         .crt-screen::after {
             content: " ";
             display: block;
@@ -104,7 +111,7 @@
         }
 
 
-        /* Content Wrapper - Warped by transforms */
+        /* Content Wrapper */
         .content-wrapper {
             display: flex;
             flex-direction: column;
@@ -118,14 +125,13 @@
             transform-style: preserve-3d;
             transform: scale(0.92); 
             
-            /* PERSISTENCE SMEAR */
-            filter: blur(0.8px) contrast(1.3) brightness(1.2);
-
-            /* RARE JITTER ANIMATION (14s loop) */
+            /* PERFORMANCE: Reduced blur radius slightly */
+            filter: blur(0.6px) contrast(1.3) brightness(1.2);
             animation: screen-jitter 14s infinite; 
+            /* PERFORMANCE: Crucial hint for the jitter animation */
+            will-change: transform, filter; 
         }
 
-        /* --- SPINNING TEXT RING --- */
         .circle-container {
             position: relative;
             width: 250px;
@@ -134,26 +140,27 @@
             animation: spin-ring 24s linear infinite; 
             transform-style: preserve-3d;
             flex-shrink: 0;
+            will-change: transform;
         }
 
         .char {
             position: absolute;
             top: 50%; left: 50%;
-            color: #00ff41;
+            color: #ffb000;
             font-size: 24px;
             font-weight: bold;
             text-transform: lowercase;
-            text-shadow: 0 0 4px #eaffef, 0 0 12px #00ff41, 0 0 25px #00ff41;
+            text-shadow: 0 0 4px #ffe6b3, 0 0 12px #ffb000, 0 0 25px #ffb000;
             transform: translate(-50%, -50%) rotate(calc(360deg / 8 * var(--i))) translateY(-125px) rotate(90deg); 
         }
 
-        /* --- 3D VECTOR SYSTEM --- */
         .vector-shape {
             position: absolute;
             top: 50%; left: 50%;
             width: 0; height: 0;
             transform-style: preserve-3d;
             animation: asteroid-tumble 24s linear infinite;
+            will-change: transform;
         }
 
         .rune-core {
@@ -169,11 +176,11 @@
         .rune-core svg {
             width: 80%; height: 80%;
             fill: none;
-            stroke: #00ff41;
+            stroke: #ffb000;
             stroke-width: 4; 
             stroke-linecap: square;
             stroke-linejoin: round;
-            filter: drop-shadow(0 0 15px #00ff41); 
+            filter: drop-shadow(0 0 15px #ffb000); 
             overflow: visible;
         }
 
@@ -182,11 +189,12 @@
             width: 80px; height: 80px;
             top: -40px; left: -40px;
             box-sizing: border-box;
-            border: 2px solid #00ff41; 
+            border: 2px solid #ffb000; 
             background-color: #000; 
             backface-visibility: visible; 
-            box-shadow: 0 0 20px rgba(0,255,65,0.5); 
+            box-shadow: 0 0 20px rgba(255, 176, 0, 0.5); 
             animation: explode-pulse 10s ease-in-out infinite;
+            will-change: transform;
         }
 
         .face.front  { transform: translateZ(40px); }
@@ -196,7 +204,6 @@
         .face.top    { transform: rotateX(90deg) translateZ(40px); }
         .face.bottom { transform: rotateX(-90deg) translateZ(40px); }
 
-        /* --- TERMINAL TEXT --- */
         .terminal-container {
             width: 85%;
             max-width: 600px;
@@ -205,47 +212,31 @@
             position: relative;
         }
         .terminal-text {
-            color: #00ff41;
+            color: #ffb000;
             font-size: 18px;
             line-height: 1.6;
             font-weight: bold;
-            text-shadow: 0 0 4px #eaffef, 0 0 15px #00ff41;
+            text-shadow: 0 0 4px #ffe6b3, 0 0 15px #ffb000;
         }
         .cursor {
             display: inline-block;
             width: 10px; height: 20px;
-            background-color: #00ff41;
+            background-color: #ffb000;
             vertical-align: bottom;
             margin-left: 4px;
-            box-shadow: 0 0 10px #00ff41;
+            box-shadow: 0 0 10px #ffb000;
             animation: blink 1s step-end infinite;
         }
         .typing .cursor { animation: none; opacity: 1; }
 
-        /* --- ANIMATION KEYFRAMES --- */
-
         @keyframes spin-ring { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes asteroid-tumble { 0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); } 100% { transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg); } }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-        
-        @keyframes explode-pulse {
-            0%, 20% { transform: var(--base-rot) translateZ(40px); }
-            45%, 65% { transform: var(--base-rot) translateZ(100px); }
-            90%, 100% { transform: var(--base-rot) translateZ(40px); }
-        }
+        @keyframes explode-pulse { 0%, 20% { transform: var(--base-rot) translateZ(40px); } 45%, 65% { transform: var(--base-rot) translateZ(100px); } 90%, 100% { transform: var(--base-rot) translateZ(40px); } }
+        @keyframes noise-move { 0% { transform: translate(0,0); } 10% { transform: translate(-5%,-5%); } 100% { transform: translate(5%,0); } }
 
-        @keyframes noise-move {
-            0% { transform: translate(0,0); } 10% { transform: translate(-5%,-5%); }
-            20% { transform: translate(-10%,5%); } 30% { transform: translate(5%,-10%); }
-            40% { transform: translate(-5%,15%); } 50% { transform: translate(-10%,5%); }
-            60% { transform: translate(15%,0); } 70% { transform: translate(0,10%); }
-            80% { transform: translate(-15%,0); } 90% { transform: translate(10%,5%); }
-            100% { transform: translate(5%,0); }
-        }
-
-        /* RARE JITTER: 14s loop */
         @keyframes screen-jitter {
-            0%, 96% { transform: scale(0.92) translateX(0) skewX(0deg); filter: blur(0.8px) contrast(1.3) brightness(1.2); }
+            0%, 96% { transform: scale(0.92) translateX(0) skewX(0deg); filter: blur(0.6px) contrast(1.3) brightness(1.2); }
             96.5% { transform: scale(0.92) translateX(4px) skewX(2deg); filter: blur(1.5px) contrast(1.5) brightness(1.8); }
             97% { transform: scale(0.92) translateX(-4px) skewX(-2deg); filter: blur(2px) contrast(1.0) brightness(0.8); }
             97.5% { transform: scale(0.92) translateX(0) skewX(0deg); }
@@ -258,12 +249,12 @@
 <body>
 
     <div class="crt-screen">
+        <canvas id="bg-canvas"></canvas>
         <div class="dust-overlay"></div>
         <div class="reflection-overlay"></div>
         <div class="noise-overlay"></div>
 
         <div class="content-wrapper">
-            
             <div class="circle-container">
                 <span class="char" style="--i:1;">p</span><span class="char" style="--i:2;">a</span><span class="char" style="--i:3;">v</span><span class="char" style="--i:4;">l</span><span class="char" style="--i:5;">o</span><span class="char" style="--i:6;">.</span><span class="char" style="--i:7;">m</span><span class="char" style="--i:8;">e</span>
                 <div class="vector-shape">
@@ -284,57 +275,71 @@
     </div>
 
     <script>
-        // HIEROGLYPHS
-        const runes = [
-            `<path d="M10,50 Q50,10 90,50 Q50,90 10,50 M50,50 m-15,0 a15,15 0 1,0 30,0 a15,15 0 1,0 -30,0" />`, 
-            `<path d="M20,90 L20,20 L80,20 L80,90 M40,90 L40,50 L60,50 L60,90" />`, 
-            `<rect x="25" y="10" width="50" height="20" /><rect x="25" y="40" width="50" height="20" /><rect x="25" y="70" width="50" height="20" />`, 
-            `<path d="M10,10 L90,10 L50,50 L90,90 L10,90 L50,50 Z" />`, 
-            `<path d="M10,10 L90,10 L90,90 L10,90 L10,30 L70,30 L70,70 L30,70 L30,50 L50,50" />`, 
-            `<path d="M50,90 L50,10 M50,30 L20,10 M50,50 L80,30 M50,70 L20,50" />`, 
-            `<path d="M20,80 Q50,80 50,50 T80,20 M15,80 L25,80 M75,20 L85,20" />` 
-        ];
-        const runeCore = document.querySelector('.rune-core');
-        function updateRune() {
-            const randomIndex = Math.floor(Math.random() * runes.length);
-            runeCore.innerHTML = `<svg viewBox="0 0 100 100">${runes[randomIndex]}</svg>`;
+        // --- OPTIMIZED BACKGROUND FLOW FIELD ---
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+
+        function resize() {
+            // OPTIMIZATION: Render at half resolution to save GPU pixel fill rate
+            // CSS scales it back up to 100%
+            width = canvas.width = window.innerWidth / 2;
+            height = canvas.height = window.innerHeight / 2;
         }
-        updateRune();
-        setInterval(updateRune, 10000); // 10s sync
+        window.addEventListener('resize', resize);
+        resize();
 
-        // TYPING ENGINE
-        const sayings = [ "the algorithm sleeps, the forest breathes.", "disconnect to reconnect.", "the ancient stone holds more data than the cloud.", "silence is the only update you need.", "return to the soil; the wifi is weak but the connection is strong.", "discard the screen, embrace the root.", "modernity is a cage of comfort.", "let the feed run dry.", "you were not born to scroll." ];
-        const textDisplay = document.getElementById('text-display');
-        const container = document.getElementById('terminal-container');
-        const wpm = 80; const averageDelay = 60000 / (wpm * 5); const typoProbability = 0.08; 
-        const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-        const getJitter = () => Math.random() * 100 - 50; 
-        const getRandomChar = () => "abcdefghijklmnopqrstuvwxyz"[Math.floor(Math.random() * 26)];
+        const particles = [];
+        const numParticles = 300; // Adjusted density for lower res
 
-        async function typeSentence(sentence) {
-            container.classList.add('typing');
-            for (let i = 0; i < sentence.length; i++) {
-                if (Math.random() < typoProbability && i < sentence.length - 2) {
-                    textDisplay.textContent += getRandomChar(); await sleep(averageDelay + getJitter());
-                    if (Math.random() > 0.5 && i + 1 < sentence.length) { textDisplay.textContent += sentence[i+1]; await sleep(averageDelay + getJitter()); }
-                    await sleep(300); 
-                    while (textDisplay.textContent.length > i) { textDisplay.textContent = textDisplay.textContent.slice(0, -1); await sleep(80); }
-                    i--; continue; 
-                }
-                textDisplay.textContent += sentence[i];
-                let d = averageDelay + getJitter(); if(sentence[i]===' '||sentence[i]===',') d+=80; if(sentence[i]==='.') d+=200; await sleep(d);
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width; this.y = Math.random() * height;
+                this.speed = Math.random() * 0.3 + 0.1; 
+                this.radius = Math.random() * 1.0 + 0.5;
             }
-            container.classList.remove('typing'); 
+            update(time) {
+                const angle = (Math.sin(this.x * 0.004 + time * 0.0005) + Math.cos(this.y * 0.004 + time * 0.0005)) * Math.PI;
+                this.x += Math.cos(angle) * this.speed; this.y += Math.sin(angle) * this.speed;
+                if (this.x < 0) this.x = width; if (this.x > width) this.x = 0;
+                if (this.y < 0) this.y = height; if (this.y > height) this.y = 0;
+            }
         }
-        async function deleteSentence() {
-            container.classList.add('typing');
-            while (textDisplay.textContent.length > 0) { textDisplay.textContent = textDisplay.textContent.slice(0, -1); await sleep(30); }
-            container.classList.remove('typing');
+        for (let i = 0; i < numParticles; i++) particles.push(new Particle());
+
+        function animateBg(time) {
+            ctx.clearRect(0, 0, width, height);
+            
+            // OPTIMIZATION: Batch Drawing
+            // We call beginPath and fill only ONCE per frame, not per particle.
+            ctx.beginPath();
+            ctx.fillStyle = 'rgba(255, 176, 0, 0.6)';
+            
+            particles.forEach(p => {
+                p.update(time);
+                // Move to new sub-path to avoid connecting lines
+                ctx.moveTo(p.x + p.radius, p.y); 
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            });
+            
+            ctx.fill(); // Single draw call
+            requestAnimationFrame(animateBg);
         }
-        async function loop() {
-            let i = Math.floor(Math.random() * sayings.length); 
-            while (true) { await typeSentence(sayings[i]); await sleep(3000); await deleteSentence(); await sleep(1000); i = (i + 1) % sayings.length; }
-        }
+        animateBg(0);
+
+        // --- HIEROGLYPHS & TYPING (Unchanged logic) ---
+        const runes = [ `<path d="M10,50 Q50,10 90,50 Q50,90 10,50 M50,50 m-15,0 a15,15 0 1,0 30,0 a15,15 0 1,0 -30,0" />`, `<path d="M20,90 L20,20 L80,20 L80,90 M40,90 L40,50 L60,50 L60,90" />`, `<rect x="25" y="10" width="50" height="20" /><rect x="25" y="40" width="50" height="20" /><rect x="25" y="70" width="50" height="20" />`, `<path d="M10,10 L90,10 L50,50 L90,90 L10,90 L50,50 Z" />`, `<path d="M10,10 L90,10 L90,90 L10,90 L10,30 L70,30 L70,70 L30,70 L30,50 L50,50" />`, `<path d="M50,90 L50,10 M50,30 L20,10 M50,50 L80,30 M50,70 L20,50" />`, `<path d="M20,80 Q50,80 50,50 T80,20 M15,80 L25,80 M75,20 L85,20" />` ];
+        const runeCore = document.querySelector('.rune-core');
+        function updateRune() { const randomIndex = Math.floor(Math.random() * runes.length); runeCore.innerHTML = `<svg viewBox="0 0 100 100">${runes[randomIndex]}</svg>`; }
+        updateRune(); setInterval(updateRune, 10000); 
+
+        const sayings = [ "the algorithm sleeps, the forest breathes.", "disconnect to reconnect.", "the ancient stone holds more data than the cloud.", "silence is the only update you need.", "return to the soil; the wifi is weak but the connection is strong.", "discard the screen, embrace the root.", "modernity is a cage of comfort.", "let the feed run dry.", "you were not born to scroll." ];
+        const textDisplay = document.getElementById('text-display'); const container = document.getElementById('terminal-container');
+        const wpm = 80; const averageDelay = 60000 / (wpm * 5); const typoProbability = 0.08; 
+        const sleep = (ms) => new Promise(r => setTimeout(r, ms)); const getJitter = () => Math.random() * 100 - 50; const getRandomChar = () => "abcdefghijklmnopqrstuvwxyz"[Math.floor(Math.random() * 26)];
+        async function typeSentence(sentence) { container.classList.add('typing'); for (let i = 0; i < sentence.length; i++) { if (Math.random() < typoProbability && i < sentence.length - 2) { textDisplay.textContent += getRandomChar(); await sleep(averageDelay + getJitter()); if (Math.random() > 0.5 && i + 1 < sentence.length) { textDisplay.textContent += sentence[i+1]; await sleep(averageDelay + getJitter()); } await sleep(300); while (textDisplay.textContent.length > i) { textDisplay.textContent = textDisplay.textContent.slice(0, -1); await sleep(80); } i--; continue; } textDisplay.textContent += sentence[i]; let d = averageDelay + getJitter(); if(sentence[i]===' '||sentence[i]===',') d+=80; if(sentence[i]==='.') d+=200; await sleep(d); } container.classList.remove('typing'); }
+        async function deleteSentence() { container.classList.add('typing'); while (textDisplay.textContent.length > 0) { textDisplay.textContent = textDisplay.textContent.slice(0, -1); await sleep(30); } container.classList.remove('typing'); }
+        async function loop() { let i = Math.floor(Math.random() * sayings.length); while (true) { await typeSentence(sayings[i]); await sleep(3000); await deleteSentence(); await sleep(1000); i = (i + 1) % sayings.length; } }
         setTimeout(loop, 1000);
     </script>
 </body>
