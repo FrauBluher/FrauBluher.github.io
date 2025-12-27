@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>pavlo.me - Amber CRT (Optimized)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>pavlo.me</title>
     <style>
-        /* --- CORE STYLES --- */
         body {
             margin: 0;
             padding: 0;
-            background-color: #020202;
+            background-color: #000;
             height: 100vh;
+            width: 100vw;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -18,101 +18,100 @@
             font-family: 'Lucida Console', 'Courier New', monospace;
         }
 
-        /* --- CRT SCREEN CONTAINER --- */
-        .crt-screen {
-            width: 100vw;
-            height: 100vh;
+        .coffin {
+            width: 100%;
+            height: 100%;
             background-color: #000;
             position: relative;
             overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            border-radius: 20px; 
-            
-            /* Reduced bloom slightly to save GPU fill rate, still looks intense */
+            /* Adaptive curve for all screens */
+            border-radius: 8vmin; 
+            /* Global phosphor bleed */
             text-shadow: 
                 0 0 3px #ffe6b3,
                 0 0 15px #ffb000,
                 0 0 40px #ffb000;
         }
 
-        /* --- LAYERS --- */
-
-        /* LAYER 0: BACKGROUND FLOW CANVAS */
-        #bg-canvas {
+        /* LAYER 0: Background Procedural Flow */
+        #mold-canvas {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: 1; 
             opacity: 0.8; 
             pointer-events: none;
-            /* PERFORMANCE: Hints browser to optimize for opacity changes */
             will-change: opacity; 
         }
 
         /* LAYER 1: Scanlines */
-        .crt-screen::before {
+        .coffin::before {
             content: " ";
             display: block;
             position: absolute;
             top: 0; left: 0; bottom: 0; right: 0;
             z-index: 990;
             pointer-events: none;
-            background: linear-gradient(to bottom, rgba(0,0,0,0) 50%, rgba(0,0,0,0.5) 50%);
+            background: linear-gradient(to bottom, rgba(0,0,0,0) 50%, rgba(0,0,0,0.6) 50%);
             background-size: 100% 4px;
         }
 
-        /* LAYER 2: Noise - Reduced opacity slightly for performance */
-        .noise-overlay {
+        /* LAYER 2: Noise/Grit */
+        .grit-layer {
             position: absolute;
             top: -50%; left: -50%; width: 200%; height: 200%;
             z-index: 992;
             pointer-events: none;
-            background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.05"/%3E%3C/svg%3E');
-            opacity: 0.12;
-            animation: noise-move 0.2s infinite steps(4);
-            /* PERFORMANCE: Promote to GPU layer */
+            background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.08"/%3E%3C/svg%3E');
+            opacity: 0.15;
+            animation: rust-crawl 0.2s infinite steps(4);
             will-change: transform; 
         }
 
-        /* LAYER 3: Dust */
-        .dust-overlay {
+        /* LAYER 3: Reflection with Adjusted Masking and Opacity */
+        .glare-scum {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 994;
+            /* Sits on top of content/scanlines/noise but BELOW vignette */
+            z-index: 996; 
             pointer-events: none;
-            background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="dust"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.005" numOctaves="5" result="noise"/%3E%3CfeColorMatrix type="matrix" values="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 8 -3" result="contrasted"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23dust)" opacity="0.6"/%3E%3C/svg%3E');
+            
+            background-image: url('https://i.imgur.com/kbKkvuZ.jpeg');
             background-size: cover;
-            mix-blend-mode: soft-light; 
-            opacity: 0.7;
-        }
+            background-position: center;
+            
+            /* UPDATED MASK:
+               Starts at 0.4 alpha in center (some visibility)
+               Fades to 1.0 alpha (black) at edges (full visibility)
+            */
+            -webkit-mask-image: radial-gradient(circle at center, rgba(0,0,0,0.4) 0%, black 80%);
+            mask-image: radial-gradient(circle at center, rgba(0,0,0,0.4) 0%, black 80%);
 
-        /* LAYER 4: Reflection */
-        .reflection-overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 996;
-            pointer-events: none;
-            background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 25%, transparent 75%, rgba(255,255,255,0.05) 100%);
-            /* PERFORMANCE: Removed blur() on reflection, simulated with gradient stops for speed */
+            /* Increased base opacity so it's brighter overall */
+            opacity: 0.8; 
+            
             mix-blend-mode: screen;
         }
 
-        /* LAYER 5: Vignette */
-        .crt-screen::after {
+        /* LAYER 4: Vignette (The physical bezel shadow) - DARKNESS REDUCED */
+        .coffin::after {
             content: " ";
             display: block;
             position: absolute;
             top: 0; left: 0; bottom: 0; right: 0;
             z-index: 1000;
             pointer-events: none;
-            box-shadow: inset 0 0 300px rgba(0,0,0,1);
-            background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.8) 100%);
+            /* Reduced alpha of shadow from 1.0 to 0.7 */
+            box-shadow: inset 0 0 35vmin rgba(0,0,0,0.7);
+            /* Reduced alpha of gradient edge from 0.8 to 0.6 */
+            background: radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.6) 100%);
         }
 
+        /* --- CONTENT --- */
 
-        /* Content Wrapper */
-        .content-wrapper {
+        .decomposition-chamber {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -124,26 +123,23 @@
             perspective: 1000px;
             transform-style: preserve-3d;
             transform: scale(0.92); 
-            
-            /* PERFORMANCE: Reduced blur radius slightly */
             filter: blur(0.6px) contrast(1.3) brightness(1.2);
-            animation: screen-jitter 14s infinite; 
-            /* PERFORMANCE: Crucial hint for the jitter animation */
+            animation: tremor 14s infinite; 
             will-change: transform, filter; 
         }
 
-        .circle-container {
+        .orbit-rot {
             position: relative;
             width: 250px;
             height: 250px;
             border-radius: 50%;
-            animation: spin-ring 24s linear infinite; 
+            animation: decay-spin 24s linear infinite; 
             transform-style: preserve-3d;
             flex-shrink: 0;
             will-change: transform;
         }
 
-        .char {
+        .maggot {
             position: absolute;
             top: 50%; left: 50%;
             color: #ffb000;
@@ -154,16 +150,16 @@
             transform: translate(-50%, -50%) rotate(calc(360deg / 8 * var(--i))) translateY(-125px) rotate(90deg); 
         }
 
-        .vector-shape {
+        .spore-sac {
             position: absolute;
             top: 50%; left: 50%;
             width: 0; height: 0;
             transform-style: preserve-3d;
-            animation: asteroid-tumble 24s linear infinite;
+            animation: tumble-weed 24s linear infinite;
             will-change: transform;
         }
 
-        .rune-core {
+        .bone-core {
             position: absolute;
             top: -40px; left: -40px;
             width: 80px; height: 80px;
@@ -173,7 +169,7 @@
             transform-style: preserve-3d;
         }
 
-        .rune-core svg {
+        .bone-core svg {
             width: 80%; height: 80%;
             fill: none;
             stroke: #ffb000;
@@ -184,7 +180,7 @@
             overflow: visible;
         }
 
-        .face {
+        .skin-flap {
             position: absolute;
             width: 80px; height: 80px;
             top: -40px; left: -40px;
@@ -193,49 +189,49 @@
             background-color: #000; 
             backface-visibility: visible; 
             box-shadow: 0 0 20px rgba(255, 176, 0, 0.5); 
-            animation: explode-pulse 10s ease-in-out infinite;
+            animation: bloat-pulse 10s ease-in-out infinite;
             will-change: transform;
         }
 
-        .face.front  { transform: translateZ(40px); }
-        .face.back   { transform: rotateY(180deg) translateZ(40px); }
-        .face.right  { transform: rotateY(90deg) translateZ(40px); }
-        .face.left   { transform: rotateY(-90deg) translateZ(40px); }
-        .face.top    { transform: rotateX(90deg) translateZ(40px); }
-        .face.bottom { transform: rotateX(-90deg) translateZ(40px); }
+        .skin-flap.front  { transform: translateZ(40px); }
+        .skin-flap.back   { transform: rotateY(180deg) translateZ(40px); }
+        .skin-flap.right  { transform: rotateY(90deg) translateZ(40px); }
+        .skin-flap.left   { transform: rotateY(-90deg) translateZ(40px); }
+        .skin-flap.top    { transform: rotateX(90deg) translateZ(40px); }
+        .skin-flap.bottom { transform: rotateX(-90deg) translateZ(40px); }
 
-        .terminal-container {
+        .grave-marker {
             width: 85%;
             max-width: 600px;
             min-height: 80px;
             text-align: center;
             position: relative;
         }
-        .terminal-text {
+        .epitaph {
             color: #ffb000;
             font-size: 18px;
             line-height: 1.6;
             font-weight: bold;
             text-shadow: 0 0 4px #ffe6b3, 0 0 15px #ffb000;
         }
-        .cursor {
+        .worm {
             display: inline-block;
             width: 10px; height: 20px;
             background-color: #ffb000;
             vertical-align: bottom;
             margin-left: 4px;
             box-shadow: 0 0 10px #ffb000;
-            animation: blink 1s step-end infinite;
+            animation: twitch 1s step-end infinite;
         }
-        .typing .cursor { animation: none; opacity: 1; }
+        .oozing .worm { animation: none; opacity: 1; }
 
-        @keyframes spin-ring { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes asteroid-tumble { 0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); } 100% { transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg); } }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-        @keyframes explode-pulse { 0%, 20% { transform: var(--base-rot) translateZ(40px); } 45%, 65% { transform: var(--base-rot) translateZ(100px); } 90%, 100% { transform: var(--base-rot) translateZ(40px); } }
-        @keyframes noise-move { 0% { transform: translate(0,0); } 10% { transform: translate(-5%,-5%); } 100% { transform: translate(5%,0); } }
+        @keyframes decay-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes tumble-weed { 0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); } 100% { transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg); } }
+        @keyframes twitch { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        @keyframes bloat-pulse { 0%, 20% { transform: var(--base-rot) translateZ(40px); } 45%, 65% { transform: var(--base-rot) translateZ(100px); } 90%, 100% { transform: var(--base-rot) translateZ(40px); } }
+        @keyframes rust-crawl { 0% { transform: translate(0,0); } 10% { transform: translate(-5%,-5%); } 100% { transform: translate(5%,0); } }
 
-        @keyframes screen-jitter {
+        @keyframes tremor {
             0%, 96% { transform: scale(0.92) translateX(0) skewX(0deg); filter: blur(0.6px) contrast(1.3) brightness(1.2); }
             96.5% { transform: scale(0.92) translateX(4px) skewX(2deg); filter: blur(1.5px) contrast(1.5) brightness(1.8); }
             97% { transform: scale(0.92) translateX(-4px) skewX(-2deg); filter: blur(2px) contrast(1.0) brightness(0.8); }
@@ -248,99 +244,89 @@
 </head>
 <body>
 
-    <div class="crt-screen">
-        <canvas id="bg-canvas"></canvas>
-        <div class="dust-overlay"></div>
-        <div class="reflection-overlay"></div>
-        <div class="noise-overlay"></div>
+    <div class="coffin">
+        <canvas id="mold-canvas"></canvas>
+        
+        <div class="glare-scum"></div>
+        <div class="grit-layer"></div>
 
-        <div class="content-wrapper">
-            <div class="circle-container">
-                <span class="char" style="--i:1;">p</span><span class="char" style="--i:2;">a</span><span class="char" style="--i:3;">v</span><span class="char" style="--i:4;">l</span><span class="char" style="--i:5;">o</span><span class="char" style="--i:6;">.</span><span class="char" style="--i:7;">m</span><span class="char" style="--i:8;">e</span>
-                <div class="vector-shape">
-                    <div class="rune-core"></div>
-                    <div class="face front"  style="--base-rot: rotateY(0deg);"></div>
-                    <div class="face back"   style="--base-rot: rotateY(180deg);"></div>
-                    <div class="face right"  style="--base-rot: rotateY(90deg);"></div>
-                    <div class="face left"   style="--base-rot: rotateY(-90deg);"></div>
-                    <div class="face top"    style="--base-rot: rotateX(90deg);"></div>
-                    <div class="face bottom" style="--base-rot: rotateX(-90deg);"></div>
+        <div class="decomposition-chamber">
+            <div class="orbit-rot">
+                <span class="maggot" style="--i:1;">p</span><span class="maggot" style="--i:2;">a</span><span class="maggot" style="--i:3;">v</span><span class="maggot" style="--i:4;">l</span><span class="maggot" style="--i:5;">o</span><span class="maggot" style="--i:6;">.</span><span class="maggot" style="--i:7;">m</span><span class="maggot" style="--i:8;">e</span>
+                <div class="spore-sac">
+                    <div class="bone-core"></div>
+                    <div class="skin-flap front"  style="--base-rot: rotateY(0deg);"></div>
+                    <div class="skin-flap back"   style="--base-rot: rotateY(180deg);"></div>
+                    <div class="skin-flap right"  style="--base-rot: rotateY(90deg);"></div>
+                    <div class="skin-flap left"   style="--base-rot: rotateY(-90deg);"></div>
+                    <div class="skin-flap top"    style="--base-rot: rotateX(90deg);"></div>
+                    <div class="skin-flap bottom" style="--base-rot: rotateX(-90deg);"></div>
                 </div>
             </div>
 
-            <div class="terminal-container" id="terminal-container">
-                <span id="text-display" class="terminal-text"></span><span class="cursor"></span>
+            <div class="grave-marker" id="grave-marker">
+                <span id="epitaph" class="epitaph"></span><span class="worm"></span>
             </div>
         </div>
     </div>
 
     <script>
-        // --- OPTIMIZED BACKGROUND FLOW FIELD ---
-        const canvas = document.getElementById('bg-canvas');
-        const ctx = canvas.getContext('2d');
-        let width, height;
+        const humus = document.getElementById('mold-canvas');
+        const fungi = humus.getContext('2d');
+        let loamW, loamH;
 
-        function resize() {
-            // OPTIMIZATION: Render at half resolution to save GPU pixel fill rate
-            // CSS scales it back up to 100%
-            width = canvas.width = window.innerWidth / 2;
-            height = canvas.height = window.innerHeight / 2;
+        function erode() {
+            loamW = humus.width = window.innerWidth / 2;
+            loamH = humus.height = window.innerHeight / 2;
         }
-        window.addEventListener('resize', resize);
-        resize();
+        window.addEventListener('resize', erode);
+        erode();
 
-        const particles = [];
-        const numParticles = 300; // Adjusted density for lower res
+        const spores = [];
+        const rotCount = 300; 
 
-        class Particle {
+        class Spore {
             constructor() {
-                this.x = Math.random() * width; this.y = Math.random() * height;
-                this.speed = Math.random() * 0.3 + 0.1; 
-                this.radius = Math.random() * 1.0 + 0.5;
+                this.x = Math.random() * loamW; this.y = Math.random() * loamH;
+                this.drift = Math.random() * 0.3 + 0.1; 
+                this.girth = Math.random() * 1.0 + 0.5;
             }
-            update(time) {
-                const angle = (Math.sin(this.x * 0.004 + time * 0.0005) + Math.cos(this.y * 0.004 + time * 0.0005)) * Math.PI;
-                this.x += Math.cos(angle) * this.speed; this.y += Math.sin(angle) * this.speed;
-                if (this.x < 0) this.x = width; if (this.x > width) this.x = 0;
-                if (this.y < 0) this.y = height; if (this.y > height) this.y = 0;
+            fester(decay) {
+                const entropy = (Math.sin(this.x * 0.004 + decay * 0.0005) + Math.cos(this.y * 0.004 + decay * 0.0005)) * Math.PI;
+                this.x += Math.cos(entropy) * this.drift; this.y += Math.sin(entropy) * this.drift;
+                if (this.x < 0) this.x = loamW; if (this.x > loamW) this.x = 0;
+                if (this.y < 0) this.y = loamH; if (this.y > loamH) this.y = 0;
             }
         }
-        for (let i = 0; i < numParticles; i++) particles.push(new Particle());
+        for (let i = 0; i < rotCount; i++) spores.push(new Spore());
 
-        function animateBg(time) {
-            ctx.clearRect(0, 0, width, height);
-            
-            // OPTIMIZATION: Batch Drawing
-            // We call beginPath and fill only ONCE per frame, not per particle.
-            ctx.beginPath();
-            ctx.fillStyle = 'rgba(255, 176, 0, 0.6)';
-            
-            particles.forEach(p => {
-                p.update(time);
-                // Move to new sub-path to avoid connecting lines
-                ctx.moveTo(p.x + p.radius, p.y); 
-                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        function decompose(decay) {
+            fungi.clearRect(0, 0, loamW, loamH);
+            fungi.beginPath();
+            fungi.fillStyle = 'rgba(255, 176, 0, 0.6)';
+            spores.forEach(s => {
+                s.fester(decay);
+                fungi.moveTo(s.x + s.girth, s.y); 
+                fungi.arc(s.x, s.y, s.girth, 0, Math.PI * 2);
             });
-            
-            ctx.fill(); // Single draw call
-            requestAnimationFrame(animateBg);
+            fungi.fill(); 
+            requestAnimationFrame(decompose);
         }
-        animateBg(0);
+        decompose(0);
 
-        // --- HIEROGLYPHS & TYPING (Unchanged logic) ---
-        const runes = [ `<path d="M10,50 Q50,10 90,50 Q50,90 10,50 M50,50 m-15,0 a15,15 0 1,0 30,0 a15,15 0 1,0 -30,0" />`, `<path d="M20,90 L20,20 L80,20 L80,90 M40,90 L40,50 L60,50 L60,90" />`, `<rect x="25" y="10" width="50" height="20" /><rect x="25" y="40" width="50" height="20" /><rect x="25" y="70" width="50" height="20" />`, `<path d="M10,10 L90,10 L50,50 L90,90 L10,90 L50,50 Z" />`, `<path d="M10,10 L90,10 L90,90 L10,90 L10,30 L70,30 L70,70 L30,70 L30,50 L50,50" />`, `<path d="M50,90 L50,10 M50,30 L20,10 M50,50 L80,30 M50,70 L20,50" />`, `<path d="M20,80 Q50,80 50,50 T80,20 M15,80 L25,80 M75,20 L85,20" />` ];
-        const runeCore = document.querySelector('.rune-core');
-        function updateRune() { const randomIndex = Math.floor(Math.random() * runes.length); runeCore.innerHTML = `<svg viewBox="0 0 100 100">${runes[randomIndex]}</svg>`; }
-        updateRune(); setInterval(updateRune, 10000); 
+        const fossils = [ `<path d="M10,50 Q50,10 90,50 Q50,90 10,50 M50,50 m-15,0 a15,15 0 1,0 30,0 a15,15 0 1,0 -30,0" />`, `<path d="M20,90 L20,20 L80,20 L80,90 M40,90 L40,50 L60,50 L60,90" />`, `<rect x="25" y="10" width="50" height="20" /><rect x="25" y="40" width="50" height="20" /><rect x="25" y="70" width="50" height="20" />`, `<path d="M10,10 L90,10 L50,50 L90,90 L10,90 L50,50 Z" />`, `<path d="M10,10 L90,10 L90,90 L10,90 L10,30 L70,30 L70,70 L30,70 L30,50 L50,50" />`, `<path d="M50,90 L50,10 M50,30 L20,10 M50,50 L80,30 M50,70 L20,50" />`, `<path d="M20,80 Q50,80 50,50 T80,20 M15,80 L25,80 M75,20 L85,20" />` ];
+        const boneCore = document.querySelector('.bone-core');
+        function exhume() { const remains = Math.floor(Math.random() * fossils.length); boneCore.innerHTML = `<svg viewBox="0 0 100 100">${fossils[remains]}</svg>`; }
+        exhume(); setInterval(exhume, 10000); 
 
-        const sayings = [ "the algorithm sleeps, the forest breathes.", "disconnect to reconnect.", "the ancient stone holds more data than the cloud.", "silence is the only update you need.", "return to the soil; the wifi is weak but the connection is strong.", "discard the screen, embrace the root.", "modernity is a cage of comfort.", "let the feed run dry.", "you were not born to scroll." ];
-        const textDisplay = document.getElementById('text-display'); const container = document.getElementById('terminal-container');
-        const wpm = 80; const averageDelay = 60000 / (wpm * 5); const typoProbability = 0.08; 
-        const sleep = (ms) => new Promise(r => setTimeout(r, ms)); const getJitter = () => Math.random() * 100 - 50; const getRandomChar = () => "abcdefghijklmnopqrstuvwxyz"[Math.floor(Math.random() * 26)];
-        async function typeSentence(sentence) { container.classList.add('typing'); for (let i = 0; i < sentence.length; i++) { if (Math.random() < typoProbability && i < sentence.length - 2) { textDisplay.textContent += getRandomChar(); await sleep(averageDelay + getJitter()); if (Math.random() > 0.5 && i + 1 < sentence.length) { textDisplay.textContent += sentence[i+1]; await sleep(averageDelay + getJitter()); } await sleep(300); while (textDisplay.textContent.length > i) { textDisplay.textContent = textDisplay.textContent.slice(0, -1); await sleep(80); } i--; continue; } textDisplay.textContent += sentence[i]; let d = averageDelay + getJitter(); if(sentence[i]===' '||sentence[i]===',') d+=80; if(sentence[i]==='.') d+=200; await sleep(d); } container.classList.remove('typing'); }
-        async function deleteSentence() { container.classList.add('typing'); while (textDisplay.textContent.length > 0) { textDisplay.textContent = textDisplay.textContent.slice(0, -1); await sleep(30); } container.classList.remove('typing'); }
-        async function loop() { let i = Math.floor(Math.random() * sayings.length); while (true) { await typeSentence(sayings[i]); await sleep(3000); await deleteSentence(); await sleep(1000); i = (i + 1) % sayings.length; } }
-        setTimeout(loop, 1000);
+        const dirges = [ "the algorithm sleeps, the forest breathes.", "disconnect to reconnect.", "the ancient stone holds more data than the cloud.", "silence is the only update you need.", "return to the soil; the wifi is weak but the connection is strong.", "discard the screen, embrace the root.", "modernity is a cage of comfort.", "let the feed run dry.", "you were not born to scroll." ];
+        const tombstone = document.getElementById('epitaph'); const cemetery = document.getElementById('grave-marker');
+        const pace = 80; const stagnation = 60000 / (pace * 5); const blight = 0.08; 
+        const hibernate = (ms) => new Promise(r => setTimeout(r, ms)); const tremor = () => Math.random() * 100 - 50; const debris = () => "abcdefghijklmnopqrstuvwxyz"[Math.floor(Math.random() * 26)];
+        async function etch(inscription) { cemetery.classList.add('oozing'); for (let i = 0; i < inscription.length; i++) { if (Math.random() < blight && i < inscription.length - 2) { tombstone.textContent += debris(); await hibernate(stagnation + tremor()); if (Math.random() > 0.5 && i + 1 < inscription.length) { tombstone.textContent += inscription[i+1]; await hibernate(stagnation + tremor()); } await hibernate(300); while (tombstone.textContent.length > i) { tombstone.textContent = tombstone.textContent.slice(0, -1); await hibernate(80); } i--; continue; } tombstone.textContent += inscription[i]; let d = stagnation + tremor(); if(inscription[i]===' '||inscription[i]===',') d+=80; if(inscription[i]==='.') d+=200; await hibernate(d); } cemetery.classList.remove('oozing'); }
+        async function erodeText() { cemetery.classList.add('oozing'); while (tombstone.textContent.length > 0) { tombstone.textContent = tombstone.textContent.slice(0, -1); await hibernate(30); } cemetery.classList.remove('oozing'); }
+        async function cycle() { let i = Math.floor(Math.random() * dirges.length); while (true) { await etch(dirges[i]); await hibernate(3000); await erodeText(); await hibernate(1000); i = (i + 1) % dirges.length; } }
+        setTimeout(cycle, 1000);
     </script>
 </body>
 </html>
