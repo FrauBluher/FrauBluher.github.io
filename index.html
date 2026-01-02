@@ -27,8 +27,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            /* Adaptive curve for all screens */
-            border-radius: 8vmin; 
             /* Global phosphor bleed */
             text-shadow: 
                 0 0 3px #ffe6b3,
@@ -78,18 +76,13 @@
             z-index: 996; 
             pointer-events: none;
             
-            background-image: url('https://i.imgur.com/kbKkvuZ.jpeg');
+            background-image: url('screen.jpg');
             background-size: cover;
             background-position: center;
             
-            /* UPDATED MASK:
-               Starts at 0.4 alpha in center (some visibility)
-               Fades to 1.0 alpha (black) at edges (full visibility)
-            */
             -webkit-mask-image: radial-gradient(circle at center, rgba(0,0,0,0.4) 0%, black 80%);
             mask-image: radial-gradient(circle at center, rgba(0,0,0,0.4) 0%, black 80%);
 
-            /* Increased base opacity so it's brighter overall */
             opacity: 0.8; 
             
             mix-blend-mode: screen;
@@ -109,8 +102,18 @@
             background: radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.6) 100%);
         }
 
-        /* --- CONTENT --- */
+        /* LAYER 5: Final Mask/Overlay */
+        .final-mask {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1001;
+            pointer-events: none;
+            background-image: url('toplayer.png');
+            background-size: cover;
+            background-position: center;
+        }
 
+        /* --- CONTENT --- */
         .decomposition-chamber {
             display: flex;
             flex-direction: column;
@@ -268,6 +271,8 @@
                 <span id="epitaph" class="epitaph"></span><span class="worm"></span>
             </div>
         </div>
+
+        <div class="final-mask"></div>
     </div>
 
     <script>
