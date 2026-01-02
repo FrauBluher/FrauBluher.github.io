@@ -319,7 +319,7 @@
         function exhume() { const remains = Math.floor(Math.random() * fossils.length); boneCore.innerHTML = `<svg viewBox="0 0 100 100">${fossils[remains]}</svg>`; }
         exhume(); setInterval(exhume, 10000); 
 
-        const dirges = [ "the algorithm sleeps, the forest breathes.", "disconnect to reconnect.", "the ancient stone holds more data than the cloud.", "silence is the only update you need.", "return to the soil; the wifi is weak but the connection is strong.", "discard the screen, embrace the root.", "modernity is a cage of comfort.", "let the feed run dry.", "you were not born to scroll." ];
+        const dirges = [ "your phone won't make you happy.", "disconnect to reconnect.", "the ancient stone holds more data than the cloud.", "silence is the only update you need.", "return to the soil; the signal is weak but the connection is strong.", "discard the screen, embrace the root.", "modernity is a cage of comfort.", "let the feed run dry.", "you were not born to scroll." ];
         const tombstone = document.getElementById('epitaph'); const cemetery = document.getElementById('grave-marker');
         const pace = 80; const stagnation = 60000 / (pace * 5); const blight = 0.08; 
         const hibernate = (ms) => new Promise(r => setTimeout(r, ms)); const tremor = () => Math.random() * 100 - 50; const debris = () => "abcdefghijklmnopqrstuvwxyz"[Math.floor(Math.random() * 26)];
